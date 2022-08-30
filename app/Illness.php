@@ -20,6 +20,11 @@ class Illness extends Model
         'illnessName', 'description', 'advice'
     ];
 
+    public function medicalRecords(){
+        return $this->belongsToMany(PatientMedicalRecord::class, 'illness_details', 'illnessID', 'medicalRecordID')
+               ->withTimestamps();
+    }
+
     public function getCreatedAtAtrribute(){
         if(!is_null($this->attributes['created_at'])){
             return Carbon::parse($this->attributes['created_at'])->format('d-m-Y H:i:s');

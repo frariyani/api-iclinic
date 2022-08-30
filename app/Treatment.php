@@ -6,29 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Patient extends Model
+class Treatment extends Model
 {
+    //
     use SoftDeletes;
 
-    protected $primaryKey = 'patientID';
+    protected $primaryKey = 'treatmentID';
 
-    protected $table = 'patients';
+    protected $table = 'treatments';
 
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'fullname', //done
-        'address', //done
-        'weight', 
-        'birthdate', //done 
-        'gender', //done
-        'medicalRecordNumber'
-    ];
-
-    protected $cast = [
-        'birthdate' => 'datetime:d-m-Y',
-        'created_at' => 'datetime:d-m-Y',
-        'updated_at' => 'datetime:d-m-Y'
+        'treatmentName', 'treatmentPrice'
     ];
 
     public function getCreatedAtAtrribute(){
@@ -42,13 +32,4 @@ class Patient extends Model
             return Carbon::parse($this->attributes['updated_at'])->format('d-m-Y H:i:s');
         }
     }
-
-    public function getBirthDateAttribute(){
-        return $this->birthdate->format('d/m/Y');
-    }
-
-    public function medicalRecords(){
-        return $this->hasMany(PatientMedicalRecord::class, 'patientID');
-    }
-
 }

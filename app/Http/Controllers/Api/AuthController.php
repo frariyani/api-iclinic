@@ -23,7 +23,7 @@ class AuthController extends Controller
         }
 
         if(!Auth::attempt($loginData)){
-            return response(['message' => 'Invalid credentials']);
+            return response(['message' => 'Username atau password salah'], 404);
         }
 
         $user = Auth::user();

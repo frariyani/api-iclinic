@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Illness;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class IllnessController extends Controller
@@ -21,13 +20,13 @@ class IllnessController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->fails()], 400);
+            return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
         $illness = Illness::create($illnessData);
 
         return response([
-            'message' => 'Illness created successfuly',
+            'message' => 'Jenis penyakit berhasil dibuat',
             'data' => $illness
         ], 200);
     }
@@ -78,22 +77,22 @@ class IllnessController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->fails()], 400);
+            return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
-        $illness->illnessNama = $updateData['illnessNama'];
+        $illness->illnessName = $updateData['illnessName'];
         $illness->description = $updateData['description'];
         $illness->advice = $updateData['advice'];
 
         if($illness->save()){
             return response([
-                'message' => 'Update illness successful',
+                'message' => 'Data jenis penyakit berhasil diubah',
                 'data' => $illness
             ], 200);
         }
 
         return response([
-            'message' => 'Update illness failed'
+            'message' => 'Gagal mengubah data jenis penyakit'
         ], 400);
     }
 
@@ -108,7 +107,7 @@ class IllnessController extends Controller
 
         if($illness->delete()){
             return response([
-                'message' => 'Illness deleted successful',
+                'message' => 'Data jenis penyakit berhasil dihapus',
                 'data' => $illness
             ], 200);
         }

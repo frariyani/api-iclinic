@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Patient;
 use Carbon\Carbon;
 
@@ -23,20 +24,21 @@ class PatientController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->errors()], 400);
+            return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
         $patient = Patient::create($patientData);
 
         return response([
-            'message' => 'Patient created successfuly',
+            'message' => 'Data pasien berhasil dibuat',
             'data' => $patient
         ], 200);
 
     }
 
     public function show(){
-        $patient = Patient::all();
+        $patient = Patient::select('*', DB::raw('DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), birthdate)), "%Y")+0 as birthdate'))
+                    ->get();
 
         if(!is_null($patient)){
             return response([
@@ -44,6 +46,22 @@ class PatientController extends Controller
                 'data' => $patient
             ]);
         }
+    }
+
+    public function showMedicalRecord($id){
+        $medicalRecord = Patient::query()
+                         ->with(['medicalRecords' => function($query){
+                            $query->select('*');
+                         }])
+                         ->find($id);
+
+        if(!is_null($medicalRecord)){
+            return response([
+                'message' => 'Medical record retrieved',
+                'data' => $medicalRecord
+            ]);
+        }
+
     }
 
     public function showPatientByID($id){
@@ -83,7 +101,7 @@ class PatientController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->errors()], 400);
+            return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
         $patient->fullname = $updateData['fullname'];
@@ -94,13 +112,13 @@ class PatientController extends Controller
 
         if($patient->save()){
             return response([
-                'message' => 'Update patient successful',
+                'message' => 'Data pasien berhasil diubah',
                 'data' => $patient
             ], 200);
         }
 
         return response([
-            'message' => 'Update patient failed'
+            'message' => 'Data pasien gagal diubah'
         ], 400);
     }
 
@@ -115,7 +133,7 @@ class PatientController extends Controller
 
         if($patient->delete()){
             return response([
-                'message' => 'Patient deleted successfuly',
+                'message' => 'Data pasien berhasil dihapus',
                 'data' => $patient
             ], 200);
         }

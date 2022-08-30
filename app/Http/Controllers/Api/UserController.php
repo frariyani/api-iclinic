@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -22,14 +23,14 @@ class UserController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->errors()], 400);
+            return response(['message' =>'Harap mengisi input dengan benar'], 400);
         }
 
         $userData['password'] = Hash::make($req->password);
         $user = User::create($userData);
 
         return response([
-            'message' => 'User created successfuly',
+            'message' => 'User berhasil dibuat',
             'data' => $user
         ], 200);
     }
@@ -47,6 +48,14 @@ class UserController extends Controller
                 'data' => $users
             ]);
         }
+    }
+
+    public function showAuthUser(){
+        $user = Auth::user()->username;
+
+        return response([
+            'data' => $user
+        ]);
     }
 
     public function showUserByID($id){
@@ -86,7 +95,7 @@ class UserController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->errors()], 400);
+            return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
         $user->username = $updateData['username'];
@@ -95,14 +104,36 @@ class UserController extends Controller
 
         if($user->save()){
             return response([
-                'message' => 'Update user successful',
+                'message' => 'Data user berhasil diubah',
                 'data' => $user
             ], 200);
         }
 
         return response([
-            'message' => 'Update user failed',
+            'message' => 'Data user gagal diubah',
             'data' => null
+        ], 400);
+    }
+
+    public function changePassword(Request $req){
+        if(!Hash::check($req->get('currentPassword'), Auth::user()->password)){
+            return response([
+                'message' => 'Password tidak sesuai'
+            ], 400);
+        }
+
+        $user = User::find(auth()->user()->userID);
+
+        $user->password = bcrypt($req->newPassword);
+
+        if($user->save()){
+            return response([
+                'message' => 'Password berhasil diubah'
+            ], 200);
+        }
+
+        return response([
+            'message' => 'Password gagal diubah'
         ], 400);
     }
 
@@ -118,13 +149,13 @@ class UserController extends Controller
 
         if($user->delete()){
             return response([
-                'message' => 'User successfuly deleted',
+                'message' => 'Data user berhasil dihapus',
                 'data' => $user
             ], 200);
         }
 
         return response([
-            'message' => 'Delete user failed',
+            'message' => 'Data user gagal dihapus',
             'data' => null
         ], 400);
     }

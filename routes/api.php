@@ -30,6 +30,8 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('user/profile/{id}', 'Api\UserController@showUserByID');
     Route::post('user/update', 'Api\UserController@update');
     Route::delete('user/delete/{id}', 'Api\UserController@delete');
+    Route::get('user/auth', 'Api\UserController@showAuthUser');
+    Route::post('user/changepassword', 'Api\UserController@changePassword');
 
     // CRUD PATIENT
     Route::post('patient/create', 'Api\PatientController@store');
@@ -37,6 +39,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('patient/get/{id}', 'Api\PatientController@showPatientByID');
     Route::post('patient/update', 'Api\PatientController@update');
     Route::delete('patient/delete/{id}', 'Api\PatientController@delete');
+    // ROute::get('patient/medrecord/{id}', 'Api\PatientController@showMedicalRecord');
 
     // CRUD ILLNESS
     Route::post('illness/create', 'Api\IllnessController@store');
@@ -44,6 +47,51 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('illness/get/{id}', 'Api\IllnessController@showIllnessByID');
     Route::post('illness/update', 'Api\IllnessController@update');
     Route::delete('illness/delete/{id}', 'Api\IllnessController@delete');
+
+    //CRUD TREATMENT
+    Route::post('treatment/create', 'Api\TreatmentController@store');
+    Route::get('treatment/show', 'Api\TreatmentController@show');
+    Route::post('treatment/update', 'Api\TreatmentController@update');
+    Route::delete('treatment/delete/{id}', 'Api\TreatmentController@delete');
+
+    //CRUD MEDICINE
+    Route::post('medicine/create', 'Api\MedicineController@store');
+    Route::get('medicine/show', 'Api\MedicineController@show');
+    Route::post('medicine/update', 'Api\MedicineController@update');
+    Route::delete('medicine/delete/{id}', 'Api\MedicineController@delete');
+    Route::post('medicine/supply/add', 'Api\MedicineController@addStock');
+
+    //CRUD MEDICAL RECORD
+    Route::post('medicalrecord/create', 'Api\MedicalRecordController@store');
+    Route::get('medicalrecord/show', 'Api\MedicalRecordController@show');
+    Route::get('medicalrecord/patient/{id}', 'Api\MedicalRecordController@getMedicalRecordByPatientID');
+    Route::post('medicalrecord/update', 'Api\MedicalRecordController@update');
+    Route::delete('medicalrecord/delete/{id}', 'Api\MedicalRecordController@delete');
+    Route::get('medicalrecord/isdone/{id}', 'Api\MedicalRecordController@setIsDone');
+
+    Route::get('medicalrecord/illness/{id}', 'Api\MedicalRecordController@showWithIllness');
+
+
+    //DASHBOARD DATA
+    Route::get('get/totalpatients', 'Api\ReportController@getTotalPatient');
+    Route::get('get/visitbymonth', 'Api\ReportController@countMedicalRecordByMonth');
+    Route::get('get/averageincome', 'Api\ReportController@getAvgIncome');
+    Route::get('get/visitdaily', 'Api\ReportController@countVisitDaily');
+    Route::get('get/topmedicine', 'Api\ReportController@get5TopMedicine');
+
+    //REPORT
+    Route::get('report/dailyvisitor/{month}', 'Api\PDFController@getDailyVisitor');
+    Route::get('report/dailyincome/{month}', 'Api\PDFController@getTotalDailyIncome');
+    Route::get('report/medicineusage/{month}/{medicineID}', 'Api\PDFController@medicineUsageAndStock');
+    Route::get('report/monthly', 'Api\PDFController@monthlyReport');
+
+    //GENERATE PDF
+    Route::get('pdf/dailyvisitor/{date}', 'Api\PDFController@generatePDFDailyVisitor');
+    Route::get('pdf/dailyincome/{date}', 'Api\PDFController@generatePDFDailyIncome');
+    Route::get('pdf/medicineusage/{date}/{medicineID}', 'Api\PDFController@generatePDFMedicineUsage');
+    Route::get('pdf/monthlyreport', 'Api\PDFController@generatePDFMonthlyReport');
+
+    Route::get('get/menu', 'Api\MenuController@getMenu');
 });
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
