@@ -18,7 +18,7 @@ class PatientMedicalRecord extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'date' , 'temperature', 'systolic', 'status', 'diastolic', 'doctorID', 'patientID', 'paymentTotal'
+        'date' , 'temperature', 'systolic', 'diastolic', 'doctorID', 'patientID', 'isDone'
     ];
 
     public function illnessess(){
@@ -33,7 +33,7 @@ class PatientMedicalRecord extends Model
 
     public function prescriptions(){
         return $this->belongsToMany(Medicine::class, 'prescriptions', 'medicalRecordID', 'medicineID')
-                ->withPivot('dosage', 'quantity', 'subTotal')
+                ->withPivot('dosage', 'quantity', 'subTotal', 'status')
                 ->withTimestamps();
     }
 
@@ -55,5 +55,13 @@ class PatientMedicalRecord extends Model
 
     public function doctor(){
         return $this->hasOne(User::class, 'userID', 'doctorID');
+    }
+
+    public function queue(){
+        return $this->hasMany(Queue::class, 'patientID');
+    }
+
+    public function payment(){
+        return $this->hasOne(Payment::class, 'medicalRecordID');
     }
 }

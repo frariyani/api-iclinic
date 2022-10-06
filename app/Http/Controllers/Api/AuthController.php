@@ -19,7 +19,7 @@ class AuthController extends Controller
         ]);
 
         if($validate->fails()){
-            return response(['message' => $validate->errors()]);
+            return response(['message' => 'Harap memasukkan username dan password'], 400);
         }
 
         if(!Auth::attempt($loginData)){

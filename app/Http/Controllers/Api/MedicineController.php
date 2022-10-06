@@ -43,6 +43,16 @@ class MedicineController extends Controller
         }
     }
 
+    public function getMedicineByID($id){
+        $medicine = Medicine::find($id);
+
+        if(!is_null($medicine)){
+            return response([
+                'data' => $medicine
+            ]);
+        }
+    }
+
     public function update(Request $req){
         $updateData = $req->all();
 

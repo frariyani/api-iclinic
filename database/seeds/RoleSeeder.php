@@ -19,6 +19,15 @@ class RoleSeeder extends Seeder
             ],
             [
                 'roleName' => 'Dokter'
+            ],
+            [
+                'roleName' => 'Pendaftar'
+            ],
+            [
+                'roleName' => 'Petugas Obat'
+            ],
+            [
+                'roleName' => 'Kasir'
             ]
         ]);
     }

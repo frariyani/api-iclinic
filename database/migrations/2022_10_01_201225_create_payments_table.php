@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePrescriptionsTable extends Migration
+class CreatePaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,20 @@ class CreatePrescriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prescriptions', function (Blueprint $table) {
-            $table->integer('medicalRecordID')->unsigned();
-            $table->integer('medicineID')->unsigned();
+        Schema::create('payments', function (Blueprint $table) {
+            $table->increments('paymentID');
 
-            $table->string('dosage', 255);
-            $table->integer('quantity');
-            $table->float('subTotal');
-            $table->boolean('status')->default(true);
+            $table->string('method')->nullable();
+            $table->float('paymentTotal')->default(0);
+            $table->date('date')->nullable();
+            $table->integer('medicalRecordID')->unsigned();
+            $table->boolean('isPaid')->default(0);
+
+            $table->string('paymentCode')->nullable();
 
             $table->foreign('medicalRecordID')->references('medicalRecordID')->on('patient_medical_records');
-            $table->foreign('medicineID')->references('medicineID')->on('medicines');
 
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
@@ -36,6 +38,6 @@ class CreatePrescriptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prescriptions');
+        Schema::dropIfExists('payments');
     }
 }

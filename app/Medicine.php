@@ -21,6 +21,16 @@ class Medicine extends Model
         'medicineName', 'supply', 'unit', 'pricePerUnit'
     ];
 
+    public function medicalRecords(){
+        return $this->belongsToMany(PatientMedicalRecord::class, 'prescriptions', 'medicineID', 'medicalRecordID')
+        ->withPivot('dosage', 'quantity', 'subTotal')
+        ->withTimestamps();
+    }
+
+    public function incomingStocks(){
+        return $this->hasMany(IncomingStock::class);
+    }
+
     public function getCreatedAtAtrribute(){
         if(!is_null($this->attributes['created_at'])){
             return Carbon::parse($this->attributes['created_at'])->format('d-m-Y H:i:s');

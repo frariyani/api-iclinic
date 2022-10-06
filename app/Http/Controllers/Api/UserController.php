@@ -51,10 +51,12 @@ class UserController extends Controller
     }
 
     public function showAuthUser(){
-        $user = Auth::user()->username;
+        $user = Auth::user()->fullname;
+        $userID = Auth::user()->roleID;
 
         return response([
-            'data' => $user
+            'data' => $user,
+            'dataID' => $userID
         ]);
     }
 

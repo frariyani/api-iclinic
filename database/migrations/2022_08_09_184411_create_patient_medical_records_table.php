@@ -17,9 +17,10 @@ class CreatePatientMedicalRecordsTable extends Migration
             $table->increments('medicalRecordID');
             $table->date('date');
             $table->float('temperature');
-            $table->float('paymentTotal')->nullable();
             $table->integer('systolic')->nullable();
             $table->integer('diastolic')->nullable();
+
+            $table->boolean('isDone')->default(false);
 
             $table->integer('doctorID')->unsigned();
             $table->integer('patientID')->unsigned();

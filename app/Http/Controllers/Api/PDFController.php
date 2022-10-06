@@ -20,7 +20,7 @@ class PDFController extends Controller
         $numMonth = $dateParse->format('m');
         $year = Carbon::now()->format('Y');
 
-        $dailyVisitor = DB::table('patient_medical_records')
+        $dailyVisitor = DB::table('queues')
                         ->select(DB::raw('count(*) as visitors, DATE_FORMAT(date, "%d-%m-%Y") as date'))
                         ->whereMonth('date', $numMonth)
                         ->whereYear('date', $year)
@@ -42,7 +42,7 @@ class PDFController extends Controller
 
         echo $strMonth;
  
-        $dailyVisitor = DB::table('patient_medical_records')
+        $dailyVisitor = DB::table('queues')
                         ->select(DB::raw('count(*) as visitors, DATE_FORMAT(date, "%d-%m-%Y") as date'))
                         ->whereMonth('date', $numMonth)
                         ->whereYear('date', $year)
@@ -60,7 +60,7 @@ class PDFController extends Controller
         $numMonth = $dateParse->format('m');
         $year = Carbon::now()->format('Y');
 
-        $dailyIncome = DB::table('patient_medical_records')
+        $dailyIncome = DB::table('payments')
                        ->select(DB::raw('CONCAT("Rp", FORMAT(SUM(paymentTotal), 2, "id_ID")) as income, DATE_FORMAT(date, "%d-%m-%Y") as date'))
                        ->whereMonth('date', $numMonth)
                        ->whereYear('date', $year)
@@ -81,7 +81,7 @@ class PDFController extends Controller
         $strMonth = $dateParse->translatedFormat('F Y');
         $year = $dateParse->format('Y');
 
-        $dailyIncome = DB::table('patient_medical_records')
+        $dailyIncome = DB::table('payments')
                         ->select(DB::raw('CONCAT("Rp", FORMAT(SUM(paymentTotal), 2, "id_ID")) as income, date'))
                         ->whereMonth('date', $numMonth)
                         ->whereYear('date', $year)

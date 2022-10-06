@@ -19,8 +19,8 @@ class SumPaymentTotal extends Migration
         AFTER INSERT ON prescriptions 
         FOR EACH ROW
             BEGIN
-                UPDATE patient_medical_records 
-                SET paymentTotal = (SELECT SUM(subTotal) FROM prescriptions WHERE medicalRecordID = NEW.medicalRecordID)
+                UPDATE payments 
+                SET paymentTotal = (SELECT SUM(subTotal) FROM prescriptions WHERE medicalRecordID = NEW.medicalRecordID AND status = 1)
                                    + (SELECT SUM(t.treatmentPrice) FROM treatments t JOIN treatment_details td
                                         ON t.treatmentID = td.treatmentID
                                         WHERE td.medicalRecordID = NEW.medicalRecordID

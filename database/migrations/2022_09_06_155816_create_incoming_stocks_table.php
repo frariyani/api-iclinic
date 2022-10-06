@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePrescriptionsTable extends Migration
+class CreateIncomingStocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,13 @@ class CreatePrescriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prescriptions', function (Blueprint $table) {
-            $table->integer('medicalRecordID')->unsigned();
-            $table->integer('medicineID')->unsigned();
-
-            $table->string('dosage', 255);
+        Schema::create('incoming_stocks', function (Blueprint $table) {
+            $table->increments('incomingStockID');
             $table->integer('quantity');
-            $table->float('subTotal');
-            $table->boolean('status')->default(true);
-
-            $table->foreign('medicalRecordID')->references('medicalRecordID')->on('patient_medical_records');
+            $table->date('date');
+            $table->dateTime('deleted_at')->nullable();
+            $table->integer('medicineID')->unsigned();
             $table->foreign('medicineID')->references('medicineID')->on('medicines');
-
             $table->timestamps();
         });
     }
@@ -36,6 +31,6 @@ class CreatePrescriptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prescriptions');
+        Schema::dropIfExists('incoming_stocks');
     }
 }

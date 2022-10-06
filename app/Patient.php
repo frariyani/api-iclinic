@@ -51,4 +51,12 @@ class Patient extends Model
         return $this->hasMany(PatientMedicalRecord::class, 'patientID');
     }
 
+    public function queues(){
+        return $this->hasOne(Queue::class, 'patientID')->latest();
+    }
+
+    public function files(){
+        return $this->hasMany(File::class, 'patientID');
+    }
+
 }

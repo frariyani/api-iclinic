@@ -37,7 +37,7 @@ class PatientController extends Controller
     }
 
     public function show(){
-        $patient = Patient::select('*', DB::raw('DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), birthdate)), "%Y")+0 as birthdate'))
+        $patient = Patient::select('*', DB::raw('DATE_FORMAT(FROM_DAYS(DATEDIFF(now(), birthdate)), "%Y")+0 as age'))
                     ->get();
 
         if(!is_null($patient)){

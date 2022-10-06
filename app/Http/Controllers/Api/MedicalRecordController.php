@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\PatientMedicalRecord;
+use App\Medicine;
+use App\Queue;
 use Illuminate\Support\Facades\Auth;
 
 use function PHPSTORM_META\map;
@@ -43,6 +45,11 @@ class MedicalRecordController extends Controller
 
         //CREATE OBJECT MEDICAL RECORD
         $medicalRecord = PatientMedicalRecord::create($medicalRecordData);
+
+        //UBAH STATUS QUEUE
+        $patientID = $medicalRecordData['patientID'];
+        $queue = new QueueController;
+        $queue->updateToWaitMedicine($patientID);
 
         //json_decode($medicalRecordData['illnessess'], true) as $ill
         foreach(json_decode($medicalRecordData['illnessess'], true) as $ill){
@@ -113,6 +120,13 @@ class MedicalRecordController extends Controller
                         }])
                         ->where('patientID', '=', $id)->get();
 
+        //$prescriptions = PatientMedicalRecord::query()
+                        //  ->with(['prescriptions' => function($query){
+                        //     $query->select('*');
+                        //  }])
+                        //  ->where('patientID', $id)->get();
+        $medicines = Medicine::all();
+
         foreach($medicalRecord as $med){
             foreach($med->illnessess as $illness){
 
@@ -127,9 +141,17 @@ class MedicalRecordController extends Controller
 
         foreach($medicalRecord as $med){
             foreach($med->prescriptions as $pre){
-
+                // echo $pre;
+                $prescriptions[] = $pre;
             }
         }
+
+        
+        // $newPrescriptions = $medicines->map(function ($m) use ($pre){
+        //     $m->dosage = data_get($pre->where('medicineID', $m->medicineID), 'pivot.dosage', 0);
+
+        //     return $m;
+        // });
 
         return response([
             'data' => $medicalRecord
@@ -142,6 +164,7 @@ class MedicalRecordController extends Controller
         $id = $updateData['medicalRecordID'];
 
         $medicalRecord = PatientMedicalRecord::find($id);
+        $storePre = PatientMedicalRecord::find($id)->prescriptions;
 
         if(is_null($medicalRecord)){
             return response([
@@ -160,7 +183,8 @@ class MedicalRecordController extends Controller
             'diastolic' => 'numeric',
             'medicalRecordID' => 'required',
             'illnessess' => 'required',
-            'treatments' => 'required'
+            'treatments' => 'required',
+            'prescriptions' => 'required'
         ]);
 
         if($validate->fails()){
@@ -174,37 +198,68 @@ class MedicalRecordController extends Controller
 
         $arrIllness = [];
         $arrTreatment = [];
-        // $arrPrescription = [];
+        $arrPrescription = [];
 
         foreach($updateData['illnessess'] as $ill){
+        // foreach(json_decode($updateData['illnessess'], true) as $ill){
             $arrIllness[] = $ill['illnessID'];
         }
 
         foreach($updateData['treatments'] as $treatment){
+        // foreach(json_decode($updateData['treatments'], true) as $treatment){
             $arrTreatment[] = $treatment['treatmentID'];
+        }
+        
+        foreach($storePre as $sp){
+            $medicalRecord->prescriptions()->updateExistingPivot($sp['medicineID'], ["status" => false]);
+            $medicalRecord->prescriptions()->detach($sp['medicineID']);
         }
 
         foreach($updateData['prescriptions'] as $prescription){
+        // foreach(json_decode($updateData['prescriptions'], true) as $prescription){
             $arrPrescription[] = $prescription;
+            $medicalRecord->prescriptions()->attach([$prescription['medicineID'] => ["quantity" => $prescription['quantity'], "dosage" => $prescription['dosage']]]);
         }
 
         $medicalRecord->illnessess()->sync($arrIllness);
         $medicalRecord->treatments()->sync($arrTreatment);
-        $medicalRecord->prescriptions()->sync($arrPrescription);
+        
+        // foreach($arrPrescription as $p){
+        //     // $medicalRecord->prescriptions()->sync($arrPrescription);
+        //     $medicalRecord->prescriptions()->attach([$p['medicineID'] => ["quantity" => $p['quantity'], "dosage" => $p['dosage']]]);
+        // }
         
         if($medicalRecord->save()){
             return response([
                 'message' => 'Update medical record successful',
                 'data' => $medicalRecord,
+                'storePre' => $storePre,
                 'illness' => $updateData['illnessess'],
                 'treatment' => $updateData['treatments'],
-                'prescription' => $arrPrescription
+                'prescription' => $updateData['prescriptions']
             ]);
         }
 
         return response([
             'message' => 'update medical record failed'
         ], 400);
+    }
+
+    public function setIsDone($id){
+        $medicalRecord = PatientMedicalRecord::find($id);
+
+        $medicalRecord->isDone = 1;
+
+        if($medicalRecord->save()){
+            return response([
+                'message' => 'Status rekam medis menjadi selesai',
+                'data' => $medicalRecord
+            ]);
+        }else{
+            return response([
+                'message' => 'Status rekam medis tidak dapat diubah'
+            ], 400);
+        }
     }
 
     public function delete($id){

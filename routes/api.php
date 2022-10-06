@@ -60,6 +60,16 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('medicine/update', 'Api\MedicineController@update');
     Route::delete('medicine/delete/{id}', 'Api\MedicineController@delete');
     Route::post('medicine/supply/add', 'Api\MedicineController@addStock');
+    Route::get('medicine/get/{id}', 'Api\MedicineController@getMedicineByID');
+
+    //CRUD QUEUE
+    Route::post('queue/create', 'Api\QueueController@store');
+    Route::get('queue/show', 'Api\QueueController@show');
+    Route::get('queue/update-progress/{id}', 'Api\QueueController@updateToOnProgress');
+    Route::get('queue/update-waiting/{id}', 'Api\QueueController@updateToWaiting');
+    Route::get('queue/update-medicine/{id}', 'Api\QueueController@updateToWaitMedicine');
+    Route::get('queue/delete/{id}', 'Api\QueueController@delete');
+    Route::get('queue/print/{id}', 'Api\QueueController@print');
 
     //CRUD MEDICAL RECORD
     Route::post('medicalrecord/create', 'Api\MedicalRecordController@store');
@@ -92,7 +102,31 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('pdf/monthlyreport', 'Api\PDFController@generatePDFMonthlyReport');
 
     Route::get('get/menu', 'Api\MenuController@getMenu');
+
+    //INCOMING STOCK
+    Route::post('stock/add', 'Api\StockController@store');
+    Route::get('stock/get/{id}', 'Api\StockController@show');
+    Route::post('stock/update', 'Api\StockController@update');
+    Route::get('stock/delete/{id}', 'Api\StockController@delete');
+
+    //FILE 
+    Route::post('file/create', 'Api\FileController@store');
+    Route::get('file/show/{id}', 'Api\FileController@getFiles');
+    Route::get('file/delete/{id}', 'Api\FileController@deleteFile');
+    Route::get('file/donwload/{id}', 'Api\FileController@getDownload');
+
+    //PRESCRIPTION QUEUE
+    Route::get('prescription/queue', 'Api\PrescriptionQueueController@getPrescriptionQueue');
+    Route::get('prescription/serve/{id}', 'Api\PrescriptionQueueController@servePrescription');
+
+    //PAYMENT
+    Route::get('payment/get', 'Api\PaymentController@show');
+    Route::get('payment/detail/{id}', 'Api\PaymentController@showDetail');
+    Route::post('payment/update', 'Api\PaymentController@update');
+    Route::get('payment/print/{id}', 'Api\PaymentController@printBill');
 });
+
+Route::get('dashboard', 'Api\ReportController@dashboard');
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
