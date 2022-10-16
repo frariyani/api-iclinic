@@ -28,6 +28,9 @@ class RoleSeeder extends Seeder
             ],
             [
                 'roleName' => 'Kasir'
+            ],
+            [
+                'roleName' => 'Super Admin'
             ]
         ]);
     }

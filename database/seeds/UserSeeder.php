@@ -14,33 +14,63 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'username' => 'test1',
-                'password' => bcrypt('pass123'),
-                'fullname' => 'Test',
-                'roleID' => '1'
+                'username' => 'anastasiaardi',
+                'password' => bcrypt('adminardi'),
+                'fullname' => 'Anastasia Ardiningsih',
+                'roleID' => '6'
             ],
             [
-                'username' => 'dokter',
-                'password' => bcrypt('dokter'),
-                'fullname' => 'Dokter',
+                'username' => 'drnrimanto',
+                'password' => bcrypt('doktermanto'),
+                'fullname' => 'Nrimanto',
                 'roleID' => '2'
             ],
             [
-                'username' => 'pendaftar',
-                'password' => bcrypt('pendaftar'),
-                'fullname' => 'Pendaftar',
+                'username' => 'rizkihamdala',
+                'password' => bcrypt('pendaftarrizki'),
+                'fullname' => 'Rizki Hamdala',
                 'roleID' => '3'
             ],
             [
-                'username' => 'petugasobat',
-                'password' => bcrypt('petugasobat'),
-                'fullname' => 'Petugas Obat',
+                'username' => 'srirejeki',
+                'password' => bcrypt('pendaftarjeki'),
+                'fullname' => 'Sri Rejeki',
+                'roleID' => '3'
+            ],
+            [
+                'username' => 'bagaswardhana',
+                'password' => bcrypt('pendaftarbagas'),
+                'fullname' => 'Bagas Wardhana',
+                'roleID' => '3'
+            ],
+            [
+                'username' => 'ekowardoyo',
+                'password' => bcrypt('obatwardoyo'),
+                'fullname' => 'Eko Wardoyo',
                 'roleID' => '4'
             ],
             [
-                'username' => 'kasir',
-                'password' => bcrypt('kasir'),
-                'fullname' => 'Kasir',
+                'username' => 'pujiono',
+                'password' => bcrypt('obatpujiono'),
+                'fullname' => 'Pujiono',
+                'roleID' => '4'
+            ],
+            [
+                'username' => 'dhalandha',
+                'password' => bcrypt('obatdhalan'),
+                'fullname' => 'Dhalan',
+                'roleID' => '4'
+            ],
+            [
+                'username' => 'srisulasmi',
+                'password' => bcrypt('kasirsulasmi'),
+                'fullname' => 'Sri Sulasmi',
+                'roleID' => '5'
+            ],
+            [
+                'username' => 'puspitasari',
+                'password' => bcrypt('kasirita'),
+                'fullname' => 'Puspitasari',
                 'roleID' => '5'
             ],
         ]);

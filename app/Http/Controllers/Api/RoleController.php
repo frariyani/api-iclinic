@@ -30,7 +30,7 @@ class RoleController extends Controller
     }
 
     public function show(){
-        $role = Role::all();
+        $role = Role::where('roleID', '!=', 6)->get();
 
         if(!is_null($role)){
             return response([

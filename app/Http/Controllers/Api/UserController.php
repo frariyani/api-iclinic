@@ -149,6 +149,13 @@ class UserController extends Controller
             ], 404);
         }
 
+        if($user->roleID == 6){
+            return response([
+                'message' => 'Super admin tidak dapat dihapus',
+                'data' => null
+            ], 404);
+        }
+
         if($user->delete()){
             return response([
                 'message' => 'Data user berhasil dihapus',

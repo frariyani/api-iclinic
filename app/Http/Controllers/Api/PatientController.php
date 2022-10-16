@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Patient;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
@@ -27,7 +28,11 @@ class PatientController extends Controller
             return response(['message' => 'Harap mengisi input dengan benar'], 400);
         }
 
-        $patient = Patient::create($patientData);
+        // $patient = Patient::create($patientData);
+        $patient = Patient::firstOrCreate(
+            ['fullname' => $req->fullname, 'address' => $req->address],
+            ['birthdate' => $req->birthdate, 'weight' => $req->weight, 'gender' => $req->gender]
+        );
 
         return response([
             'message' => 'Data pasien berhasil dibuat',
