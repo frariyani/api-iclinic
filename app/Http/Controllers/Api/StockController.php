@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\IncomingStock;
+use App\Medicine;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -84,6 +85,10 @@ class StockController extends Controller
 
     public function delete($id){
         $incomingStock = IncomingStock::find($id);
+
+        $medicine = Medicine::find($incomingStock->medicineID);
+        $medicine->supply = $medicine->supply - $incomingStock->quantity;
+        $medicine->save();
 
         if(is_null($incomingStock)){
             return response([

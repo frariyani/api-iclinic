@@ -148,7 +148,7 @@ class PDFController extends Controller
                   ->whereYear('date', $year)
                   ->get();
 
-        $monthlyIncome = DB::table('patient_medical_records')
+        $monthlyIncome = DB::table('payments')
                          ->select(DB::raw('FORMAT(SUM(paymentTotal), 2, "id_ID") as monthly_income'))
                          ->whereMonth('date', $month)
                          ->whereYear('date', $year)
@@ -184,7 +184,7 @@ class PDFController extends Controller
                   ->whereYear('date', $year)
                   ->get();
 
-        $monthlyIncome = DB::table('patient_medical_records')
+        $monthlyIncome = DB::table('payments')
                          ->select(DB::raw('FORMAT(SUM(paymentTotal), 2, "id_ID") as monthly_income'))
                          ->whereMonth('date', $month)
                          ->whereYear('date', $year)

@@ -27,6 +27,9 @@ class SumPaymentTotal extends Migration
                                      )
                 WHERE medicalRecordID = NEW.medicalRecordID
                                     ;
+                
+                UPDATE medicines SET supply = supply - NEW.quantity 
+                WHERE medicineID = NEW.medicineID;
             END
         ');
     }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Queue;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Response;
 use PDF;
 
 class QueueController extends Controller
@@ -123,6 +124,8 @@ class QueueController extends Controller
     public function updateToWaitMedicine($id){
         $patientID = $id;
         $queue = Queue::where('patientID', $patientID)->where('status', '!=', 'Selesai')->latest('created_at')->first();
+
+        
         $queue->status = 'Menunggu Obat';
         $queue->save();
 
@@ -157,5 +160,7 @@ class QueueController extends Controller
                                           ],  
                )->setPaper($size, 'landscape');
         return $pdf->download('queue.pdf');
+        // $headers = array('Content-Type: application/pdf');
+        // return Response::download($pdf, 'TiketAntrian_'.$queue->queueNumber, $headers);
     }
 }
